@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>For You, Cutuuuuuu 🫶</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Caveat:wght@400;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* --- DESIGN SYSTEM / THEMES --- */
+  :root {
+    /* MEHFIL MODE (Default Dark) */
+    --bg-main: #12080e;
+    --bg-card: #1c0f17;
+    --border-color: #3a1e2d; 
+    --primary-color: #d4af37; /* Vintage Gold */
+    --secondary-color: #e8748a; /* Soft Rose */
+    --text-main: #f5e6eb;
+    --text-muted: #b09ba5;
+    --accent-bg: #291522;
+    --cursor-emoji: "✨";
+    --divider-weight: 2px;
+  }
+
+  [data-theme="light"] {
+    /* BAAGEECHA MODE (Light Nature) */
+    --bg-main: #fbf8f3; /* Warm Sun-kissed Cream */
+    --bg-card: #ffffff;
+    --border-color: #eaddca;
+    --primary-color: #d48c00; /* Sunflower Gold */
+    --secondary-color: #2e5a44; /* Deep Meadow Green */
+    --text-main: #2b231d;
+    --text-muted: #6e6156;
+    --accent-bg: #f3ebe1;
+    --cursor-emoji: "🌻";
+    --divider-weight: 1px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease; }
+
+  body {
+    background: var(--bg-main);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text-main);
+    overflow-x: hidden;
+  }
+
+  /* --- TOGGLE BUTTON --- */
+  .theme-toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 100;
+    background: var(--bg-card);
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 10px 18px;
+    border-radius: 30px;
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .theme-toggle-btn:hover {
+    transform: scale(1.05);
+  }
+
+  /* --- FLOATING PARTICLES --- */
+  .particles-bg {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0; overflow: hidden;
+  }
+  .particle {
+    position: absolute; font-size: 1.4rem; opacity: 0;
+    animation: floatDown linear infinite;
+  }
+  @keyframes floatDown {
+    0% { transform: translateY(-50px) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    90% { opacity: 0.5; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* --- POLAROID PHOTO FRAMES --- */
+  .polaroid-frame {
+    background: #ffffff;
+    padding: 12px 12px 24px 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    border-radius: 4px;
+    max-width: 100%;
+    margin: 1.5rem auto;
+    display: inline-block;
+    transform: rotate(var(--r, -1.5deg));
+  }
+  [data-theme="light"] .polaroid-frame {
+    box-shadow: 0 8px 25px rgba(110,97,86,0.15);
+    background: #fffcf7;
+    border: 1px solid #ebd9c5;
+  }
+  .polaroid-frame img {
+    width: 100%;
+    max-height: 450px;
+    object-fit: cover;
+    display: block;
+    border-radius: 2px;
+  }
+  .polaroid-caption {
+    font-family: 'Caveat', cursive;
+    color: #2b231d;
+    font-size: 1.25rem;
+    text-align: center;
+    margin-top: 12px;
+  }
+
+  /* --- HERO --- */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .sorry-tag {
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem; font-weight: 700;
+    color: var(--primary-color);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    background: var(--bg-card);
+    border: 1.5px solid var(--border-color);
+    padding: 6px 20px; border-radius: 30px;
+    margin-bottom: 1.5rem;
+    display: inline-block;
+    animation: fadeUp 0.8s ease forwards;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(3rem, 9vw, 6.5rem);
+    line-height: 1.1;
+    color: var(--text-main);
+    animation: fadeUp 0.8s 0.2s ease forwards;
+    opacity: 0;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--primary-color);
+  }
+
+  .hero-sub {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.3rem, 3.5vw, 2rem);
+    color: var(--text-muted);
+    margin-top: 1.5rem;
+    animation: fadeUp 0.8s 0.4s ease forwards;
+    opacity: 0;
+  }
+
+  .scroll-hint {
+    position: absolute; bottom: 2rem;
+    font-family: 'Caveat', cursive;
+    color: var(--text-muted); font-size: 1.1rem;
+    animation: bounce 2s infinite;
+  }
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* --- APOLOGY SECTION --- */
+  .sorry-section {
+    position: relative; z-index: 1;
+    max-width: 750px; margin: 0 auto;
+    padding: 4rem 2rem;
+    text-align: center;
+  }
+
+  .section-label {
+    font-family: 'Caveat', cursive;
+    font-size: 1.2rem; letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+  }
+
+  .sorry-card {
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    border: 1px solid var(--border-color);
+    text-align: left;
+  }
+  .sorry-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+  }
+  .sorry-card p {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--text-main);
+    font-weight: 300;
+    margin-bottom: 1rem;
+  }
+  .sorry-card .note {
+    font-family: 'Caveat', cursive;
+    font-size: 1.4rem;
+    color: var(--secondary-color);
+    margin-top: 1.5rem;
+    display: block;
+    text-align: center;
+  }
+
+  /* --- HINGE SECTION --- */
+  .hinge-section {
+    position: relative; z-index: 1;
+    max-width: 750px; margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+  .hinge-card {
+    background: var(--bg-card);
+    border-radius: 24px;
+    padding: 3rem 2.5rem;
+    border: 2px solid var(--border-color);
+    text-align: center;
+  }
+  .hinge-card h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.6rem, 4.5vw, 2.4rem);
+    color: var(--primary-color);
+    margin-bottom: 1.2rem;
+  }
+  .hinge-card p {
+    font-size: 1.05rem; line-height: 1.85;
+    color: var(--text-main); font-weight: 300;
+  }
+
+  /* --- MEMORIES GRID --- */
+  .memories-section {
+    position: relative; z-index: 1;
+    padding: 4rem 2rem;
+    max-width: 1000px; margin: 0 auto;
+  }
+  .memories-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 6vw, 3.5rem);
+    text-align: center;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+  }
+  .memories-sub {
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem; color: var(--text-muted);
+    text-align: center; margin-bottom: 4rem;
+  }
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  .memory-card {
+    background: var(--bg-card);
+    border-radius: 20px;
+    padding: 2rem;
+    box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .memory-emoji {
+    font-size: 2.2rem; margin-bottom: 0.8rem; display: block;
+  }
+  .memory-card h3 {
+    font-family: 'Caveat', cursive;
+    font-size: 1.5rem; font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+  }
+  .memory-card p {
+    font-size: 0.95rem; line-height: 1.75;
+    color: var(--text-main); font-weight: 300;
+  }
+  .memory-card .tag {
+    display: inline-block; margin-top: 1rem;
+    background: var(--accent-bg);
+    color: var(--text-muted);
+    font-family: 'Caveat', cursive;
+    font-size: 0.95rem; font-weight: 700;
+    padding: 4px 14px; border-radius: 20px;
+    border: 1px solid var(--border-color);
+    align-self: flex-start;
+  }
+
+  /* --- FINAL SECTION --- */
+  .final-section {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 6rem 2rem;
+  }
+  .final-section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 7vw, 4.2rem);
+    color: var(--text-main);
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+  .final-section h2 em {
+    font-style: italic; color: var(--primary-color);
+  }
+  .final-msg {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+    color: var(--text-muted);
+    max-width: 550px; margin: 0 auto 2.5rem;
+    line-height: 1.6;
+  }
+  .hearts-row {
+    font-size: 2.2rem;
+    letter-spacing: 8px;
+  }
+
+  .signature {
+    position: relative; z-index: 1;
+    text-align: center;
+    padding: 3rem 2rem;
+    font-family: 'Caveat', cursive;
+    font-size: 1.6rem;
+    color: var(--primary-color);
+    border-top: 1px solid var(--border-color);
+  }
+
+  .solid-divider {
+    height: var(--divider-weight);
+    background: var(--border-color);
+    max-width: 80%;
+    margin: 3rem auto;
+    opacity: 0.8;
+  }
+
+  @media (max-width: 600px) {
+    .sorry-card, .hinge-card { padding: 2rem 1.5rem; }
+    .memory-grid { grid-template-columns: 1fr; }
+    .theme-toggle-btn { top: 10px; right: 10px; padding: 8px 14px; font-size: 1rem; }
+  }
+</style>
+</head>
+<body data-theme="dark">
+
+<button class="theme-toggle-btn" onclick="toggleTheme()" id="themeBtn">
+  🌻 Switch to Baageecha Mode
+</button>
+
+<div class="particles-bg" id="particlesContainer"></div>
+
+<section class="hero">
+  <span class="sorry-tag">a little message for you 🌸</span>
+  <h1 class="hero-title">I'm so<br><em>sorry,</em><br>Pookie</h1>
+  <p class="hero-sub"><b>Happy 1 month Ishuuu! </b> You deserved better yesterday, and I know it 🥺</p>
+  
+  <div class="polaroid-frame" style="--r: 2deg; margin-top: 2rem; max-width: 320px;">
+    <img src="WhatsApp Image 2026-05-19 at 19.14.18 (1).jpeg" alt="Beautiful smile">
+    <div class="polaroid-caption">that smile saves my day ❤️</div>
+  </div>
+
+  <span class="scroll-hint">↓ scroll for all the feelings ↓</span>
+</section>
+
+<div class="solid-divider"></div>
+
+<section class="sorry-section">
+  <p class="section-label">the apology</p>
+  <div class="sorry-card">
+    <h2>I'm sorry for yesterday 💔</h2>
+    <p>
+      Yesterday was messy and I know you got hurt because of the whole situation with my parents. 
+      That was never okay, and I genuinely hate that you had to go through that. You didn't deserve any of it.
+      I know things are resolved now, but I still needed you to see just how bad I feel about it 
+      and more importantly, how much you mean to me. my cutuuuuuuuuuuuu 🥹💋
+    </p>
+    
+    <div style="text-align: center; margin: 1.5rem 0;">
+      <div class="polaroid-frame" style="--r: -2deg; max-width: 300px;">
+        <img src="WhatsApp Image 2026-05-19 at 19.14.18.jpeg" alt="Cute look">
+        <div class="polaroid-caption">hayee, pure perfection 🥺👉🏻👈🏻</div>
+      </div>
+    </div>
+
+    <p>
+      You took it all so gracefully. You're too good for this world honestly. And you're 
+      way too good for me, but I'm never letting you go so 🫶
+    </p>
+    <span class="note">I love you. A LOT. Like embarrassingly a lot. 😭💋</span>
+  </div>
+</section>
+
+<div class="solid-divider"></div>
+
+<section class="hinge-section">
+  <div class="hinge-card">
+    <h2>The Hinge Request That Changed Everything</h2>
+    <p>
+      Thank you for accepting my Hinge request. Genuinely. I never expected something good 
+      to happen, and then you came, with your Union rant, and I just knew. 
+      Never realised when a normal conversation shifted to a crush, when that crush became 
+      like, and when like became <strong>love</strong>. 
+    </p>
+
+    <div class="polaroid-frame" style="--r: 1deg; max-width: 320px; margin: 2rem 0;">
+      <img src="WhatsApp Image 2026-05-12 at 20.33.54.jpeg" alt="Cafe date">
+      <div class="polaroid-caption">My absolute favorite view in the universe ☕✨</div>
+    </div>
+
+    <p>
+      Thank you for coming into my life, for loving me, and most importantly — 
+      for <em>choosing me</em>. Every single day. 🫶
+    </p>
+    <p style="margin-top: 1rem;">
+      And I love everything about you. Your voice, your smile, your laugh, your eyes, your hands, your hugs, your texts, your rants, your random thoughts, your love for food, your love for me. 
+      Thank you for loving me exactly the way I am. 🥹
+    </p>
+  </div>
+</section>
+
+<div class="solid-divider"></div>
+
+<section class="memories-section">
+  <h2 class="memories-title">Little Things I'll Never Forget</h2>
+  <p class="memories-sub">The moments that live rent-free in my head forever 🏠</p>
+  
+  <div class="memory-grid">
+    <div class="memory-card">
+      <div>
+        <span class="memory-emoji">🍦</span>
+        <h3>The Ice Cream</h3>
+        <p>You got me ice cream when my paper didn't go well. You didn't have to. You just did. That's when I knew you were different.</p>
+      </div>
+      <span class="tag">softest thing ever 🥺</span>
+    </div>
+    
+    <div class="memory-card">
+      <div>
+        <span class="memory-emoji">📞</span>
+        <h3>First Phone Call</h3>
+        <p>Your voice. On our first call. Awkward as anything but still so so cute. I replayed that call in my head for days after 😭</p>
+      </div>
+      <span class="tag">your voice tho 🤌</span>
+    </div>
+
+    <div class="memory-card">
+      <div>
+        <span class="memory-emoji">🎵</span>
+        <h3>The 4-Hour Video Call</h3>
+        <p>The duet session. YOUR VOICE. Hayee ❤️❤️❤️ I didn't know what you liked about my voice but okay fine, I'll take it 😭</p>
+      </div>
+      <span class="tag">🤌🤌 so peak</span>
+    </div>
+
+    <div class="polaroid-frame" style="--r: -1.5deg; grid-column: span 1;">
+      <img src="WhatsApp Image 2026-05-19 at 19.14.19.jpeg" alt="On call memory">
+      <div class="polaroid-caption">Watching you turn around gracefully 🫠❤️</div>
+    </div>
+
+    <div class="memory-card">
+      <div>
+        <span class="memory-emoji">🎬</span>
+        <h3>The First Movie</h3>
+        <p>So so so good. And you cried at the last part. I genuinely wanted to just give you a hug right then and there 🥹 pookie 💋</p>
+      </div>
+      <span class="tag">I saw you crying 👀</span>
+    </div>
+
+    <div class="memory-card">
+      <div>
+        <span class="memory-emoji">💐</span>
+        <h3>The Flowers YOU Got ME</h3>
+        <p>You showed up with flowers for ME on our first date (while I showed up 20 mins late with nothing lmao I'm so sorry 😭). The sweetest thing 👉🏻👈🏻</p>
+      </div>
+      <span class="tag">thank you ishuuu 💋</span>
+    </div>
+
+    <div class="memory-card">
+      <div>
+        <span class="memory-emoji">🏛️</span>
+        <h3>Humayun's Tomb</h3>
+        <p>First date 🏆. Despite me being awkward af and arriving late and getting nothing I genuinely enjoyed every single minute with you. Peak. 🤌🤌</p>
+      </div>
+      <div class="polaroid-frame" style="--r: 2deg; margin-top: 1rem;">
+        <img src="20260505_145352.jpg" alt="Humayuns tomb silhouette">
+      </div>
+      <span class="tag">first date ever 🥹</span>
+    </div>
+
+    <div class="memory-card">
+      <div>
+        <span class="memory-emoji">🛕</span>
+        <h3>The Gurudwara Incident</h3>
+        <p>"Abh toh gya phone tera" "god me so jaao uske" 😭😭 That's gonna be one of our funniest memories EVER. (vaise aap sulaate god me?? 👉🏻👈🏻. mujhe pata hai sulaa dete)</p>
+        
+        <div class="polaroid-frame" style="--r: -1deg; margin-top: 1.5rem;">
+          <img src="WhatsApp Image 2026-05-19 at 19.27.47.jpeg" alt="Gurudwara memory">
+          <div class="polaroid-caption">Hayee! This is that Gurudwara image! 🛕💖</div>
+        </div>
+        <p style="font-size: 0.9rem; margin-top: 1rem;">I genuinely enjoying laughing at this with you forever!</p>
+      </div>
+      <span class="tag">we're laughing at this forever</span>
+    </div>
+
+    <div class="memory-card">
+      <div>
+        <span class="memory-emoji">🎭</span>
+        <h3>The 3D Movie Date</h3>
+        <p>Film wasn't great honestly 😭 but your hands on my hair and cheeks?? Hayeeeeee 😭👉🏻👈🏻💋 The butterflies you give me should be illegal honestly.</p>
+        
+        <div class="polaroid-frame" style="--r: 1.5deg; margin-top: 1.5rem;">
+          <img src="WhatsApp Image 2026-05-19 at 19.41.06.jpeg" alt="3D Movie Date Picture">
+          <div class="polaroid-caption">Cutest cinema dates with you 🎬❤️</div>
+        </div>
+      </div>
+      <span class="tag">your hands tho 🥺🤌</span>
+    </div>
+
+    <div class="polaroid-frame" style="--r: -2deg;">
+      <img src="WhatsApp Image 2026-05-12 at 20.33.54 (1).jpeg" alt="Walking in the park">
+      <div class="polaroid-caption">Greenery, warm breezes, and you 🌳✨</div>
+    </div>
+
+   
+  </div>
+</section>
+
+<div class="solid-divider"></div>
+
+<section class="final-section">
+  <h2>You're my<br><em>favourite</em><br>person, always.</h2>
+  <p class="final-msg">
+    I love you so much it's genuinely embarrassing.<br>
+    I'm sorry for yesterday. I'll always choose you. 🫶<br>
+    I'll fight with everyone to keep you in my life. I promise.<br>
+  </p>
+  <div class="hearts-row"> 💋 💋 💋 💋 💋 </div>
+</section>
+
+<div class="signature">
+  — your pookie who messed up but loves you infinitely 😭🫶
+</div>
+
+<script>
+  // Dynamic Emoji lists according to aesthetic instructions
+  const darkEmojis = ['✨', '🎵', '📜', '🥀', '💫', '🍷', '🌙', '🎻'];
+  const lightEmojis = ['🌻', '🍃', '☕', '🌸', '☀️', '🌷', '🌿', '☁️'];
+
+  function generateParticles(theme) {
+    const container = document.getElementById('particlesContainer');
+    container.innerHTML = ''; // reset previous list
+    
+    const activeEmojis = theme === 'dark' ? darkEmojis : lightEmojis;
+    
+    for (let i = 0; i < 30; i++) {
+      const el = document.createElement('div');
+      el.className = 'particle';
+      el.textContent = activeEmojis[Math.floor(Math.random() * activeEmojis.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDuration = (7 + Math.random() * 8) + 's';
+      el.style.animationDelay = (Math.random() * 10) + 's';
+      el.style.fontSize = (0.9 + Math.random() * 0.8) + 'rem';
+      container.appendChild(el);
+    }
+  }
+
+  function toggleTheme() {
+    const body = document.body;
+    const currentTheme = body.getAttribute('data-theme');
+    const toggleBtn = document.getElementById('themeBtn');
+    
+    if (currentTheme === 'dark') {
+      body.setAttribute('data-theme', 'light');
+      toggleBtn.innerHTML = '✨ Switch to Mehfil Mode';
+      generateParticles('light');
+    } else {
+      body.setAttribute('data-theme', 'dark');
+      toggleBtn.innerHTML = '🌻 Switch to Baageecha Mode';
+      generateParticles('dark');
+    }
+  }
+
+  // Initializing default dark theme arrays on load
+  window.addEventListener('DOMContentLoaded', () => {
+    generateParticles('dark');
+  });
+</script>
+
+</body>
+</html>
